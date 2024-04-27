@@ -1,5 +1,5 @@
 const routePaths = ['/', '/test1', '/test2', '/test2/vanilla', '/test2/react'] as const
-type ROUTE_PATH = (typeof routePaths)[number];
+export type ROUTE_PATH = (typeof routePaths)[number];
 type BaseRoute = {
     key: ROUTE_PATH;
     link: string;
@@ -13,7 +13,7 @@ export type ChildRoute = BaseRoute & {
 }
 export type ROUTE = ParentRoute | ChildRoute;
 
-const routes: Record<ROUTE_PATH, ROUTE> = {
+export const routes: Record<ROUTE_PATH, ROUTE> = {
     '/': {
         key: '/',
         link: '/',
@@ -28,7 +28,7 @@ const routes: Record<ROUTE_PATH, ROUTE> = {
     },
     '/test2': {
         key: '/test2',
-        link: '/test2',
+        link: '/test2/vanilla',
         name: '테스트2',
         children: ['/test2/vanilla', '/test2/react']
     },
@@ -45,3 +45,7 @@ const routes: Record<ROUTE_PATH, ROUTE> = {
         children: null
     }
 };
+
+export const isParentRoute = (route: ROUTE): route is ParentRoute => Array.isArray(route.children);
+
+export const gnbRootList = (routes['/'] as ParentRoute).children.map(r => routes[r]);
